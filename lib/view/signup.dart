@@ -1,67 +1,120 @@
 import 'package:flutter/material.dart';
 
-// --- CUSTOM CLIPPER FOR THE CURVED TOP SECTION ---
-class CurvedClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(0, size.height * 0.8); // Start of curve below the top left
-    path.quadraticBezierTo(
-      size.width / 2,
-      size.height + 50, // Midpoint for the deep curve
-      size.width,
-      size.height * 0.8, // End of curve below the top right
-    );
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
+// Assuming 'package:aqua_mate/main.dart' provides authController
+import 'package:aqua_mate/main.dart';
+
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class Signinpage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return SigninpageState();
-  }
-}
+class _SignupPageState extends State<SignupPage> {
+  // TEXT CONTROLLERS
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _dateOfBirthController = TextEditingController();
 
-class SigninpageState extends State<Signinpage> {
-  // Controllers for text fields
-  TextEditingController _fullNameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _dateOfBirthController = TextEditingController();
-
-  // Gender selection
   String? _selectedGender;
 
-  // Date picker
-  Future<void> _selectDate(BuildContext context) async {
+  // ERROR VARIABLES
+  String? fullNameError;
+  String? emailError;
+  String? passwordError;
+  String? genderError;
+  String? dobError;
+
+  // VALIDATION + REGISTER
+  _onSignup() {
+    setState(() {
+      fullNameError = null;
+      emailError = null;
+      passwordError = null;
+      genderError = null;
+      dobError = null;
+    });
+
+    bool isValid = true;
+
+    // FULL NAME
+    if (_fullNameController.text.trim().isEmpty) {
+      fullNameError = "Full name is required";
+      isValid = false;
+    }
+
+    // EMAIL
+    if (_emailController.text.trim().isEmpty) {
+      emailError = "Email is required";
+      isValid = false;
+    } else {
+      bool emailValid = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
+          .hasMatch(_emailController.text.trim());
+
+      if (!emailValid) {
+        emailError = "Enter a valid email";
+        isValid = false;
+      }
+    }
+
+    // PASSWORD
+    if (_passwordController.text.trim().isEmpty) {
+      passwordError = "Password is required";
+      isValid = false;
+    } else if (_passwordController.text.trim().length < 6) {
+      passwordError = "Password must be at least 6 characters";
+      isValid = false;
+    }
+
+    // GENDER
+    if (_selectedGender == null) {
+      genderError = "Please select a gender";
+      isValid = false;
+    }
+
+    // DOB
+    if (_dateOfBirthController.text.trim().isEmpty) {
+      dobError = "Date of birth is required";
+      isValid = false;
+    }
+
+    setState(() {});
+
+    // STOP IF INVALID
+    if (!isValid) return;
+
+    // API CALL
+    String result = authController.register(
+      fullName: _fullNameController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+      gender: _selectedGender!,
+      dob: _dateOfBirthController.text.trim(),
+    );
+
+    if (result == "Success") {
+      Navigator.pop(context, true);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result)),
+      );
+    }
+  }
+
+  // DATE PICKER
+  Future<void> _selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Color(0xFF29A091), // Teal color
-              onPrimary: Colors.white,
-              onSurface: Colors.black,
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
+
     if (picked != null) {
       setState(() {
         _dateOfBirthController.text =
-            "${picked.day}/${picked.month}/${picked.year}";
+        "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
       });
     }
   }
@@ -75,274 +128,253 @@ class SigninpageState extends State<Signinpage> {
     super.dispose();
   }
 
-  // --- Helper Widget for Input Fields ---
-  Widget _buildInputField({
-    required String label,
+  // CUSTOM INPUT FIELD
+  Widget _buildCustomInputField({
     required TextEditingController controller,
-    required IconData icon,
-    bool obscureText = false,
-    TextInputType keyboardType = TextInputType.text,
+    required String labelText,
+    IconData? suffixIcon,
+    bool isPassword = false,
+    bool readOnly = false,
     VoidCallback? onTap,
+    String? errorText,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 8),
-          GestureDetector(
-            onTap: onTap,
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFE0E0E0), // Light gray background
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: TextField(
-                controller: controller,
-                obscureText: obscureText,
-                keyboardType: keyboardType,
-                enabled: onTap == null, // Disable if it has onTap (for date picker)
-                style: const TextStyle(color: Colors.black),
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 20.0),
-                  border: InputBorder.none,
-                  suffixIcon: Icon(icon, color: Colors.black54),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // --- Helper Widget for Gender Radio Buttons ---
-  Widget _buildGenderRadio(String value, String label) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedGender = value;
-          });
-        },
-        child: Row(
-          children: [
-            Radio<String>(
-              value: value,
-              groupValue: _selectedGender,
-              onChanged: (String? value) {
-                setState(() {
-                  _selectedGender = value;
-                });
-              },
-              activeColor: Color(0xFF29A091), // Teal color
-            ),
-            Text(
-              label,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // --- Helper Widget for Gradient Button ---
-  Widget _buildGradientButton({
-    required String text,
-    required Gradient gradient,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 55,
-        alignment: Alignment.center,
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Text(
-          text,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          labelText,
           style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+              fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF454545)),
+        ),
+        const SizedBox(height: 6),
+
+        Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0F0F0),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: (errorText != null) ? Colors.red : Color(0xFFCCCCCC),
+              width: 0.7,
+            ),
+          ),
+          child: TextField(
+            controller: controller,
+            obscureText: isPassword,
+            readOnly: readOnly,
+            onTap: onTap,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+              border: InputBorder.none,
+              suffixIcon: suffixIcon != null
+                  ? Icon(suffixIcon, color: Colors.grey)
+                  : null,
+            ),
           ),
         ),
-      ),
+
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              errorText,
+              style: const TextStyle(color: Colors.red, fontSize: 13),
+            ),
+          ),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
-    // Define the gradients and colors to match the design
-    const Color tealLight = Color(0xFF80DED0);
-    const Color tealDark = Color(0xFF29A091);
-    const Color greenDark = Color(0xFF4C987F);
-
-    final topGradient = const LinearGradient(
-      colors: [tealLight, tealDark],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-    );
-
-    final signUpGradient = const LinearGradient(
-      colors: [Color(0xFFA5E6F6), Color(0xFF85D6C4)],
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-    );
-
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 1. Curved Header Section
-            ClipPath(
-              clipper: CurvedClipper(),
-              child: Container(
-                width: size.width,
-                height: size.height * 0.35, // Adjust height
-                decoration: BoxDecoration(gradient: topGradient),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 50.0),
-                    child: Image.asset(
-                      'assets/images/logo.png',
-                      height: 180,
-                      fit: BoxFit.contain,
+            // HEADER
+            Stack(
+              children: [
+                Container(
+                  height: 250,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF26A69A), Color(0xFF80DEEA)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(50),
+                      bottomRight: Radius.circular(50),
+                    ),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Icon(Icons.anchor, size: 80, color: Colors.white),
                     ),
                   ),
                 ),
-              ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  // 2. Welcome Text
-                  const Text(
-                    "New Account",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+                Positioned(
+                  top: 40,
+                  left: 10,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    "Register to continue the AquaMate",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black54,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
+                ),
 
-                  // 3. Full Name Input
-                  _buildInputField(
-                    label: "FullName",
-                    controller: _fullNameController,
-                    icon: Icons.person_outline,
-                    keyboardType: TextInputType.name,
-                  ),
-
-                  // 4. Email Input
-                  _buildInputField(
-                    label: "Email",
-                    controller: _emailController,
-                    icon: Icons.mail_outline,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-
-                  // 5. Password Input
-                  _buildInputField(
-                    label: "Password",
-                    controller: _passwordController,
-                    icon: Icons.key_outlined,
-                    obscureText: true,
-                  ),
-
-                  // 6. Gender Selection
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: Text(
-                      "Gender",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      _buildGenderRadio("male", "Male"),
-                      _buildGenderRadio("female", "Female"),
-                      _buildGenderRadio("others", "Others"),
+                Positioned(
+                  bottom: -30,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    children: const [
+                      Text("New Account",
+                          style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF454545))),
+                      SizedBox(height: 5),
+                      Text("Register to continue the\nAquaMate",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16, color: Colors.grey)),
                     ],
                   ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 50),
+
+            // FORM
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                children: [
+                  _buildCustomInputField(
+                      controller: _fullNameController,
+                      labelText: "Full Name",
+                      errorText: fullNameError),
+                  const SizedBox(height: 20),
+
+                  _buildCustomInputField(
+                      controller: _emailController,
+                      labelText: "Email",
+                      suffixIcon: Icons.mail_outline,
+                      errorText: emailError),
+                  const SizedBox(height: 20),
+
+                  _buildCustomInputField(
+                      controller: _passwordController,
+                      labelText: "Password",
+                      isPassword: true,
+                      suffixIcon: Icons.vpn_key_outlined,
+                      errorText: passwordError),
+                  const SizedBox(height: 20),
+
+                  // GENDER
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Gender",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF454545))),
+                      Row(
+                        children: [
+                          Row(children: [
+                            Radio<String>(
+                              value: "Male",
+                              groupValue: _selectedGender,
+                              onChanged: (value) => setState(() {
+                                _selectedGender = value;
+                              }),
+                            ),
+                            const Text("Male"),
+                          ]),
+                          Row(children: [
+                            Radio<String>(
+                              value: "Female",
+                              groupValue: _selectedGender,
+                              onChanged: (value) => setState(() {
+                                _selectedGender = value;
+                              }),
+                            ),
+                            const Text("Female"),
+                          ]),
+                          Row(children: [
+                            Radio<String>(
+                              value: "Others",
+                              groupValue: _selectedGender,
+                              onChanged: (value) => setState(() {
+                                _selectedGender = value;
+                              }),
+                            ),
+                            const Text("Others"),
+                          ]),
+                        ],
+                      ),
+
+                      if (genderError != null)
+                        Text(genderError!,
+                            style: const TextStyle(color: Colors.red)),
+                    ],
+                  ),
+
                   const SizedBox(height: 10),
 
-                  // 7. Date of Birth Input
-                  _buildInputField(
-                    label: "Date of Birth",
-                    controller: _dateOfBirthController,
-                    icon: Icons.calendar_today,
-                    onTap: () => _selectDate(context),
+                  // DOB
+                  _buildCustomInputField(
+                      controller: _dateOfBirthController,
+                      labelText: "Date of Birth",
+                      suffixIcon: Icons.calendar_today_outlined,
+                      readOnly: true,
+                      onTap: _selectDate,
+                      errorText: dobError),
+                  const SizedBox(height: 40),
+
+                  // BUTTON
+                  Container(
+                    width: double.infinity,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF26A69A), Color(0xFF4DB6AC)],
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: _onSignup,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                      ),
+                      child: const Text("Sign Up",
+                          style:
+                          TextStyle(fontSize: 18, color: Colors.white)),
+                    ),
                   ),
 
                   const SizedBox(height: 20),
 
-                  // 8. Sign Up Button (Gradient)
-                  _buildGradientButton(
-                    text: "Sign Up",
-                    gradient: signUpGradient,
-                    onTap: () {
-                      // Perform sign up logic
-                      print("Sign Up tapped");
-                      print("Full Name: ${_fullNameController.text}");
-                      print("Email: ${_emailController.text}");
-                      print("Password: ${_passwordController.text}");
-                      print("Gender: $_selectedGender");
-                      print("Date of Birth: ${_dateOfBirthController.text}");
-                      // Add your sign up logic here
-                    },
+                  // LOGIN TEXT
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Already have an account? "),
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: const Text(
+                          "Login",
+                          style: TextStyle(
+                              color: Color(0xFF26A69A),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 20),

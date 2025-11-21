@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:aqua_mate/view/signup.dart';
+
+import 'package:aqua_mate/routes/app_routes.dart';
 
 // --- CUSTOM CLIPPER FOR THE CURVED TOP SECTION ---
 class CurvedClipper extends CustomClipper<Path> {
@@ -22,21 +23,16 @@ class CurvedClipper extends CustomClipper<Path> {
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
 
-// Keeping the user's original class names for the fix
-class loginpage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
-  State<StatefulWidget> createState() {
-    return loginpageState();
-  }
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class loginpageState extends State<loginpage> {
-  // Changed to reflect Email and Password fields in the design
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
-  // isloading state is kept but its usage is commented out until SharedPreferences is re-implemented
-  bool isloading = false;
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -44,45 +40,6 @@ class loginpageState extends State<loginpage> {
     // NOTE: Uncomment and set up SharedPreferences package to enable this logic
     // readfromstorage();
   }
-
-  /*
-  // NOTE: This logic requires 'shared_preferences' package and AppRoute setup.
-  // It is commented out to allow the UI code to run.
-
-  readfromstorage() async {
-    isloading = true;
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString("email");
-    var password = prefs.getString("password");
-
-    if (email != null && password != null) {
-      setState(() {
-        _emailController.text = email;
-        _passwordController.text = password;
-      });
-      Future.delayed(const Duration(seconds: 1)).whenComplete(() {
-        // Navigator.of(context).pushNamed(AppRoute.conversationpage);
-      });
-    } else {
-      setState(() {
-        isloading = false;
-      });
-    }
-  }
-
-  storeinstorage() async {
-    setState(() {
-      isloading = true;
-    });
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("email", _emailController.text);
-    prefs.setString("password", _passwordController.text);
-
-    setState(() {
-      isloading = false;
-    });
-  }
-  */
 
   // --- Helper Widget for Input Fields ---
   Widget _buildInputField({
@@ -136,6 +93,13 @@ class loginpageState extends State<loginpage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   // --- Helper Widget for Gradient Button ---
@@ -287,23 +251,21 @@ class loginpageState extends State<loginpage> {
                     onTap: () {
                       // Perform login logic
                       print("Login tapped with Email: ${_emailController.text}");
-                      // if (!isloading) { storeinstorage(); } // Re-add SharedPreferences logic here
-                      // Navigator.of(context).pushNamed(AppRoute.conversationpage);
                     },
                   ),
 
                   // 6. Sign Up Button (Solid Color)
                   _buildGradientButton(
                     text: "Sign Up",
-                    gradient: const LinearGradient(
-                      colors: [greenDark, greenDark],
-                    ), // Use a flat color gradient for simplicity
-                    onTap: () {
-                      // Navigate to Sign Up page
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Signinpage()),
-                      );
+                    gradient: const LinearGradient(colors: [greenDark, greenDark]),
+                    onTap: () async {
+                      final result = await Navigator.pushNamed(context, AppRoutes.signup);
+                      if (!mounted) return;
+                      if (result == true) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Registration successful. Please log in.")),
+                        );
+                      }
                     },
                   ),
                 ],

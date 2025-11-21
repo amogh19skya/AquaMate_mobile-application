@@ -1,24 +1,23 @@
 import 'dart:async';
-import 'package:aqua_mate/view/loginpage.dart';
+
 import 'package:flutter/material.dart';
 
+import 'package:aqua_mate/routes/app_routes.dart';
+
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 4), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => loginpage()),
-        );
-      }
+    Timer(const Duration(seconds: 4), () {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
     });
   }
 
@@ -28,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
+            colors: const [
               Color(0xFF68E0F8), // top light blue
               Color(0xFF59D889), // bottom green
             ],
@@ -49,10 +48,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 fit: BoxFit.contain,
               ),
 
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
 
               // --- Text below image ---
-              Text(
+              const Text(
                 "AquaMate",
                 style: TextStyle(
                   fontSize: 28,
