@@ -251,6 +251,8 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       // Perform login logic
                       print("Login tapped with Email: ${_emailController.text}");
+                      // Navigate to dashboard
+                      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
                     },
                   ),
 

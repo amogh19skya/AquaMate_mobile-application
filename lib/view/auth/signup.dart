@@ -239,7 +239,7 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(height: 5),
                       Text("Register to continue the\nAquaMate",
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16, color: Colors.grey)),
+                          style: TextStyle(fontSize: 20, color: Colors.grey)),
                     ],
                   ),
                 ),

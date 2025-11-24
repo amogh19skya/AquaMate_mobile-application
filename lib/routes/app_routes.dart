@@ -1,19 +1,37 @@
 import 'package:flutter/material.dart';
 
-import 'package:aqua_mate/view/loginpage.dart';
-import 'package:aqua_mate/view/signup.dart';
-import 'package:aqua_mate/view/splash_screen.dart';
+import 'package:aqua_mate/view/auth/loginpage.dart';
+import 'package:aqua_mate/view/auth/signup.dart';
+import 'package:aqua_mate/view/onboarding/splash_screen.dart';
+import 'package:aqua_mate/view/dashboard/aquarium_setup.dart';
+import 'package:aqua_mate/view/dashboard/aquarium_step_form.dart';
+import 'package:aqua_mate/view/dashboard/dashboard.dart';
+import 'package:aqua_mate/view/dashboard/Maintaince.dart';
+import 'package:aqua_mate/view/dashboard/library.dart';
+import 'package:aqua_mate/view/dashboard/settings.dart';
 
 /// Central place to keep every named route used in the app.
 class AppRoutes {
   static const String splash = '/';
   static const String login = '/login';
   static const String signup = '/signup';
+  static const String dashboard = '/dashboard';
+  static const String maintenance = '/maintenance';
+  static const String library = '/library';
+  static const String settings = '/settings';
+  static const String aquariumSetup = '/aquarium-setup';
+  static const String aquariumStepForm = '/aquarium-step-form';
 
   static Map<String, WidgetBuilder> get routes => {
         splash: (_) => const SplashScreen(),
         login: (_) => const LoginPage(),
         signup: (_) => const SignupPage(),
+        dashboard: (_) => const DashboardPage(),
+        maintenance: (_) => const MaintenanceScreen(),
+        library: (_) => const LibraryPage(),
+        settings: (_) => const SettingsPage(),
+        aquariumSetup: (_) => const AquariumSetupPage(),
+        aquariumStepForm: (_) => const AquariumStepFormPage(),
       };
 }
 
