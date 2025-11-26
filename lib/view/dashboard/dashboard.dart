@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:aqua_mate/routes/app_routes.dart';
 import 'package:aqua_mate/widgets/shared_bottom_nav.dart';
 
-// Assuming you are using the Get package based on your structure.
-// If not, replace 'GetView' with 'StatelessWidget' or 'StatefulWidget'.
-// import 'package:get/get.dart';
-// import '../../controller/dashboard_controller.dart';
-
-// Placeholder Widgets - You will create these in the next steps.
+// Placeholder Widgets - Keep them as they are
 class CompatibilityCard extends StatelessWidget {
   const CompatibilityCard({super.key});
   @override
@@ -30,17 +24,25 @@ class AquariumInfoCard extends StatelessWidget {
 }
 
 // Main Dashboard Page
-class DashboardPage extends StatelessWidget /* Replace with GetView<DashboardController> if using GetX */ {
+class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 1. Top Section (App Bar)
-      appBar: _buildAppBar(context),
+      backgroundColor: Colors.white,
 
-      // 2. Main Content (Scrollable Cards)
-      body: _buildBody(context),
+      body: Column(
+        children: [
+          // 1. Custom Header (Replaces AppBar)
+          _buildCustomHeader(context),
+
+          // 2. Main Content (Scrollable Cards)
+          Expanded(
+            child: _buildBody(context),
+          ),
+        ],
+      ),
 
       // 3. Bottom Navigation & Floating Action Button
       bottomNavigationBar: const SharedBottomNav(currentIndex: 1),
@@ -51,77 +53,96 @@ class DashboardPage extends StatelessWidget /* Replace with GetView<DashboardCon
 
   // --- Widget Builders ---
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    // You can replace this with a PreferredSize widget for better control
-    // or just a standard AppBar. We'll use a standard one for simplicity here.
-    return AppBar(
-      // The leading icon/logo section
-      leadingWidth: 150,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 16.0),
-        child: Row(
-          children: [
-            // Placeholder for the AquaMate logo
-            const Icon(Icons.waves, color: Colors.teal, size: 32),
-            const SizedBox(width: 8),
-            Text(
-              'AquaMate',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.grey.shade800,
-              ),
-            ),
+  Widget _buildCustomHeader(BuildContext context) {
+    // Custom header structure matching LibraryPage's header
+    return Container(
+      padding: const EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 20),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF7EE8FA), // Start color (light blue)
+            Color(0xFF49AEB1), // End color (dark blue)
           ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(25),
+          bottomRight: Radius.circular(25),
         ),
       ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top Row (Logo + Icons)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Logo/App Name
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/logo.png", // Ensure this path is correct
+                    height: 35,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "AquaMate",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  )
+                ],
+              ),
 
-      // The trailing notification and user icon
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.notifications_none, size: 28),
-          onPressed: () { /* Handle notification tap */ },
-        ),
-        IconButton(
-          icon: const Icon(Icons.account_circle, size: 28),
-          onPressed: () { /* Handle profile tap */ },
-        ),
-        const SizedBox(width: 8),
-      ],
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(40.0),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  // Data from the controller: controller.userName
-                  'Welcome Back Amo !',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  // Data from the controller: controller.statusMessage
-                  'Your aquarium is doing great',
-                  style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
-                ),
-                const SizedBox(height: 8),
-              ],
+              // Icons
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications_none, color: Colors.black87),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.person_outline, color: Colors.black87),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 10),
+
+          // Welcome Message
+          const Text(
+            "Welcome Back Amo!",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
             ),
           ),
-        ),
+
+          const SizedBox(height: 4),
+
+          // Status Message
+          Text(
+            "Your aquarium is doing great",
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.grey.shade800,
+            ),
+          ),
+        ],
       ),
-      backgroundColor: Colors.transparent,
-      elevation: 0,
     );
   }
 
   Widget _buildBody(BuildContext context) {
     const double padding = 16.0;
 
-    // Using a ListView to allow scrolling if many aquariums are added
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: padding, vertical: 8.0),
       children: [
@@ -145,9 +166,6 @@ class DashboardPage extends StatelessWidget /* Replace with GetView<DashboardCon
           tankName: 'Tank Name: Aqua Aura',
           color: Colors.indigo.shade100,
         ),
-        // Add more AquariumInfoCard widgets here dynamically from a list
-        // in your DashboardController if needed.
-
         // Space at the bottom so the last card isn't covered by the FAB
         const SizedBox(height: 100),
       ],

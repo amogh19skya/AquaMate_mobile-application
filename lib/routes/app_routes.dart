@@ -9,6 +9,7 @@ import 'package:aqua_mate/view/dashboard/dashboard.dart';
 import 'package:aqua_mate/view/dashboard/Maintaince.dart';
 import 'package:aqua_mate/view/dashboard/library.dart';
 import 'package:aqua_mate/view/dashboard/settings.dart';
+import 'package:aqua_mate/view/dashboard/reminderSetupForm.dart';
 
 /// Central place to keep every named route used in the app.
 class AppRoutes {
@@ -19,6 +20,7 @@ class AppRoutes {
   static const String maintenance = '/maintenance';
   static const String library = '/library';
   static const String settings = '/settings';
+  static const String reminderSetup = '/reminder-setup';
   static const String aquariumSetup = '/aquarium-setup';
   static const String aquariumStepForm = '/aquarium-step-form';
 
@@ -30,6 +32,7 @@ class AppRoutes {
         maintenance: (_) => const MaintenanceScreen(),
         library: (_) => const LibraryPage(),
         settings: (_) => const SettingsPage(),
+        reminderSetup: (_) => const ReminderSetupForm(),
         aquariumSetup: (_) => const AquariumSetupPage(),
         aquariumStepForm: (_) => const AquariumStepFormPage(),
       };

@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 // Assuming you'll eventually use a controller for state management (e.g., GetX, Provider, BLoC)
 // For simplicity, we'll use a StatefulWidget for now.
 
-class ReminderScreen extends StatefulWidget {
-  const ReminderScreen({super.key});
+// FIX: Class name changed to align with the route and file name
+class ReminderSetupForm extends StatefulWidget {
+  const ReminderSetupForm({super.key});
 
   @override
-  State<ReminderScreen> createState() => _ReminderScreenState();
+  State<ReminderSetupForm> createState() => _ReminderSetupFormState();
 }
 
-class _ReminderScreenState extends State<ReminderScreen> {
+// FIX: State class name updated
+class _ReminderSetupFormState extends State<ReminderSetupForm> {
   // 1. State variables to hold the selected reminder type and date/time
   String? _selectedTask;
   DateTime? _selectedDate;
@@ -58,7 +60,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Reminder', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Reminder Setup', style: TextStyle(fontWeight: FontWeight.bold)), // Changed title slightly
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -213,15 +215,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   // Placeholder for the save function that will call the controller
   void _saveReminder() {
+    // ... (rest of the save logic remains the same)
     if (_selectedTask == null || _selectedDate == null || _selectedTime == null || _tankNameController.text.isEmpty) {
-      // Show an error message if any field is missing
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill out all fields!')),
       );
       return;
     }
 
-    // Combine Date and Time into a single DateTime object
     final DateTime finalScheduledDate = DateTime(
       _selectedDate!.year,
       _selectedDate!.month,
@@ -230,21 +231,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
       _selectedTime!.minute,
     );
 
-    // In a real app, you would use Provider/Controller here:
-    // final controller = Provider.of<ReminderController>(context, listen: false);
-    // controller.setReminder(
-    //   tankName: _tankNameController.text,
-    //   task: _selectedTask!,
-    //   scheduledDate: finalScheduledDate,
-    // );
-
-    // For now, just print the data
     print('--- New Reminder Data ---');
     print('Tank Name: ${_tankNameController.text}');
     print('Task: $_selectedTask');
     print('Scheduled For: $finalScheduledDate');
     print('-------------------------');
-
-    // Navigator.pop(context);
   }
 }

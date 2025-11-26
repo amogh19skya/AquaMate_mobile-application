@@ -20,7 +20,7 @@ class LibraryPage extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   Color(0xFF7EE8FA),
-                  Color(0xFF80FF72),
+                  Color(0xFF49AEB1),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -110,13 +110,13 @@ class LibraryPage extends StatelessWidget {
 
                   _buildImageCard(
                     label: "Salt Water",
-                    imagePath: "assets/images/saltwater.png",
+                    imagePath: "assets/images/library/saltwater.png",
                   ),
                   const SizedBox(height: 16),
 
                   _buildImageCard(
                     label: "Aquascape",
-                    imagePath: "assets/images/aquascape.png",
+                    imagePath: "assets/images/library/aquascape.png",
                   ),
                   const SizedBox(height: 100),
                 ],
@@ -132,43 +132,56 @@ class LibraryPage extends StatelessWidget {
   }
 
   // -------- IMAGE CARD WIDGET --------
-  Widget _buildImageCard({required String label, required String imagePath}) {
+  Widget _buildImageCard({
+    required String label,
+    required String imagePath,
+  }) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 20),
       height: 180,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: label == "Fresh Water"
-              ? [const Color(0xFF7EE8FA), const Color(0xFF4FC3F7)]
-              : label == "Salt Water"
-                  ? [const Color(0xFF80FF72), const Color(0xFF66BB6A)]
-                  : [const Color(0xFFB39DDB), const Color(0xFF9575CD)],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+      child: Stack(
+        children: [
+          // Background Image
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+
+          // Dark overlay (optional for readable text)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                color: Colors.black.withOpacity(0.3),
+              ),
+            ),
+          ),
+
+          // Text Label
+          Positioned(
+            left: 12,
+            top: 12,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [
+                  Shadow(blurRadius: 6, color: Colors.black),
+                ],
+              ),
+            ),
           ),
         ],
       ),
-      alignment: Alignment.topLeft,
-      padding: const EdgeInsets.all(12),
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-          shadows: [
-            Shadow(blurRadius: 6, color: Colors.black87),
-          ],
-        ),
-      ),
     );
   }
+
 }

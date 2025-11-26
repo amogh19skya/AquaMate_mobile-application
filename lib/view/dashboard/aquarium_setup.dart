@@ -1,4 +1,5 @@
  import 'package:flutter/material.dart';
+ import 'package:aqua_mate/widgets/shared_bottom_nav.dart';
 
 // --- Custom Fish Painter ---
 class FishPainter extends CustomPainter {
@@ -76,14 +77,7 @@ class AquariumSetupPage extends StatefulWidget {
 }
 
 class _AquariumSetupPageState extends State<AquariumSetupPage> {
-  int _selectedIndex = 0; // For bottom navigation
   String? _selectedAquariumType; // 'fresh' or 'salt'
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   // Build header with logo and icons
   Widget _buildHeader() {
@@ -283,62 +277,6 @@ class _AquariumSetupPageState extends State<AquariumSetupPage> {
     );
   }
 
-  // Build bottom navigation bar
-  Widget _buildBottomNavBar() {
-    return Container(
-      height: 80,
-      decoration: BoxDecoration(
-        color: AquariumColors.navBarColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(40),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 0,
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(40),
-        ),
-        child: BottomNavigationBar(
-          backgroundColor: AquariumColors.navBarColor,
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          selectedItemColor: AquariumColors.aquaMain,
-          unselectedItemColor: Colors.grey[500],
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-          onTap: _onItemTapped,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.check_box_outlined),
-              label: 'Maintenance',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              label: 'Dashboard',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu_book_outlined),
-              label: 'Library',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings_outlined),
-              label: 'Settings',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -420,10 +358,11 @@ class _AquariumSetupPageState extends State<AquariumSetupPage> {
             ),
           ),
 
-          // Bottom Navigation Bar
-          _buildBottomNavBar(),
         ],
       ),
+      // Use the shared bottom navigation so navigation works the same
+      // as on Dashboard / Library / Maintenance pages.
+      bottomNavigationBar: const SharedBottomNav(currentIndex: 1),
     );
   }
 }
