@@ -10,6 +10,7 @@ import 'package:aqua_mate/view/dashboard/Maintaince.dart';
 import 'package:aqua_mate/view/dashboard/library.dart';
 import 'package:aqua_mate/view/dashboard/settings.dart';
 import 'package:aqua_mate/view/dashboard/reminderSetupForm.dart';
+import '../view/dashboard/compability_checker.dart';
 
 /// Central place to keep every named route used in the app.
 class AppRoutes {
@@ -23,6 +24,8 @@ class AppRoutes {
   static const String reminderSetup = '/reminder-setup';
   static const String aquariumSetup = '/aquarium-setup';
   static const String aquariumStepForm = '/aquarium-step-form';
+  static const compatibilityChecker = '/compatibilityChecker';
+
 
   static Map<String, WidgetBuilder> get routes => {
         splash: (_) => const SplashScreen(),
@@ -35,6 +38,8 @@ class AppRoutes {
         reminderSetup: (_) => const ReminderSetupForm(),
         aquariumSetup: (_) => const AquariumSetupPage(),
         aquariumStepForm: (_) => const AquariumStepFormPage(),
-      };
+        compatibilityChecker: (context) => const CompatibilityCheckerPage(),
+
+  };
 }
 

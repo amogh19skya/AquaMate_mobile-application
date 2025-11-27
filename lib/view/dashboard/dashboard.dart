@@ -36,6 +36,7 @@ class DashboardPage extends StatelessWidget {
         children: [
           // 1. Custom Header (Replaces AppBar)
           _buildCustomHeader(context),
+          const SizedBox(height: 16),
 
           // 2. Main Content (Scrollable Cards)
           Expanded(
@@ -55,87 +56,90 @@ class DashboardPage extends StatelessWidget {
 
   Widget _buildCustomHeader(BuildContext context) {
     // Custom header structure matching LibraryPage's header
-    return Container(
-      padding: const EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 20),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF7EE8FA), // Start color (light blue)
-            Color(0xFF49AEB1), // End color (dark blue)
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(25),
-          bottomRight: Radius.circular(25),
-        ),
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+        bottomLeft: Radius.circular(25),
+        bottomRight: Radius.circular(25),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Top Row (Logo + Icons)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Logo/App Name
-              Row(
-                children: [
-                  Image.asset(
-                    "assets/images/logo.png", // Ensure this path is correct
-                    height: 35,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    "AquaMate",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  )
-                ],
-              ),
-
-              // Icons
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.notifications_none, color: Colors.black87),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.person_outline, color: Colors.black87),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 20),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF7EE8FA), // Start color (light blue)
+              Color(0xFF49AEB1), // End color (dark blue)
             ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top Row (Logo + Icons)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Logo/App Name
+                Row(
+                  children: [
+                    Image.asset(
+                      "assets/images/logo.png", // Ensure this path is correct
+                      height: 35,
+                    ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      "AquaMate",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    )
+                  ],
+                ),
 
-          const SizedBox(height: 10),
-
-          // Welcome Message
-          const Text(
-            "Welcome Back Amo!",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: Colors.black87,
+                // Icons
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.notifications_none, color: Colors.black87),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.person_outline, color: Colors.black87),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
 
-          const SizedBox(height: 4),
+            const SizedBox(height: 10),
 
-          // Status Message
-          Text(
-            "Your aquarium is doing great",
-            style: TextStyle(
-              fontSize: 15,
-              color: Colors.grey.shade800,
+            // Welcome Message
+            const Text(
+              "Welcome Back Amo!",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: Colors.black87,
+              ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 4),
+
+            // Status Message
+            Text(
+              "Your aquarium is doing great",
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.grey.shade800,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -146,9 +150,25 @@ class DashboardPage extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: padding, vertical: 8.0),
       children: [
-        // 1. Fish Compatibility Card (Green)
-        const CompatibilityCard(),
-        const SizedBox(height: padding),
+        InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, AppRoutes.compatibilityChecker);
+          },
+          child: Container(
+            height: 120,
+            decoration: BoxDecoration(
+              color: Colors.green.shade100,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Center(
+              child: Text(
+                "Fish Compatibility Checker",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
+
 
         // 2. Maintenance Review Card (Pink/Red)
         const MaintenanceCard(),
