@@ -11,12 +11,18 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        // ⭐ 1. CHANGE JAVA VERSION TO 1.8 (if using older Kotlin/Flutter) OR KEEP 11
+        //    AND ADD DESUGARING FLAG
+        sourceCompatibility = JavaVersion.VERSION_1_8 // Changed from VERSION_11 for compatibility
+        targetCompatibility = JavaVersion.VERSION_1_8 // Changed from VERSION_11 for compatibility
+
+        // ⭐ 2. ENABLE CORE LIBRARY DESUGARING
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        // ⭐ 3. ENSURE JVM TARGET IS 1.8
+        jvmTarget = "1.8" // Changed from VERSION_11.toString()
     }
 
     defaultConfig {
@@ -41,4 +47,10 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// ⭐ 4. ADD THE DESUGARING DEPENDENCY BLOCK AT THE END
+dependencies {
+    // Add the desugaring library dependency
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

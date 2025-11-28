@@ -1,5 +1,6 @@
- import 'package:flutter/material.dart';
- import 'package:aqua_mate/widgets/shared_bottom_nav.dart';
+import 'package:flutter/material.dart';
+import 'package:aqua_mate/routes/app_routes.dart';
+import 'package:aqua_mate/widgets/shared_bottom_nav.dart';
 
 // --- Custom Fish Painter ---
 class FishPainter extends CustomPainter {
@@ -204,6 +205,7 @@ class _AquariumSetupPageState extends State<AquariumSetupPage> {
     required Color cardColor,
     required String type,
     required Color fishColor,
+    VoidCallback? onPressed,
   }) {
     final isSelected = _selectedAquariumType == type;
     
@@ -212,6 +214,7 @@ class _AquariumSetupPageState extends State<AquariumSetupPage> {
         setState(() {
           _selectedAquariumType = type;
         });
+        onPressed?.call();
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -341,6 +344,9 @@ class _AquariumSetupPageState extends State<AquariumSetupPage> {
                     cardColor: AquariumColors.lightBlue,
                     type: 'fresh',
                     fishColor: const Color(0xFFE91E63), // Red/Pink for Betta
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.aquariumStepForm);
+            },
                   ),
 
                   // Salt Water Card
