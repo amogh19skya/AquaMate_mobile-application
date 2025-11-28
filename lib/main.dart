@@ -1,3 +1,4 @@
+import 'package:aqua_mate/services/notification_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aqua_mate/controller/auth_controller.dart';
@@ -6,7 +7,9 @@ import 'package:aqua_mate/routes/app_routes.dart';
 // ⭐ GLOBAL CONTROLLER (accessible from everywhere)
 AuthController authController = AuthController();
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();      //  Required before async work
+  await NotificationService.initialize();         //  Initialize notifications
   runApp(const MyApp());
 }
 

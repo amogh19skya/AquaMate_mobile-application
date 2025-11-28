@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../services/notification_service.dart';
+
 // Assuming you'll eventually use a controller for state management (e.g., GetX, Provider, BLoC)
 // For simplicity, we'll use a StatefulWidget for now.
 
@@ -148,7 +150,40 @@ class _ReminderSetupFormState extends State<ReminderSetupForm> {
                     child: ElevatedButton(
                       onPressed: () {
                         // TODO: Implement the save logic by calling ReminderController
-                        _saveReminder();
+                        void _saveReminder() async {
+                          if (_selectedTask == null ||
+                              _selectedDate == null ||
+                              _selectedTime == null ||
+                              _tankNameController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Please fill out all fields!')),
+                            );
+                            return;
+                          }
+
+                          final DateTime finalScheduledDate = DateTime(
+                            _selectedDate!.year,
+                            _selectedDate!.month,
+                            _selectedDate!.day,
+                            _selectedTime!.hour,
+                            _selectedTime!.minute,
+                          );
+
+                          // 🔥 Schedule the notification
+                          await NotificationService.scheduleNotification(
+                            id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                            title: _selectedTask!,
+                            body: 'Tank: ${_tankNameController.text}',
+                            scheduledDate: finalScheduledDate,
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Reminder Set Successfully!')),
+                          );
+
+                          Navigator.pop(context);
+                        }
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF67D7A3), // A friendly green color
