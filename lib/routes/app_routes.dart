@@ -7,7 +7,7 @@ import 'package:aqua_mate/view/dashboard/aquarium_setup.dart';
 import 'package:aqua_mate/view/dashboard/aquarium_step_form.dart';
 import 'package:aqua_mate/view/dashboard/dashboard.dart';
 import 'package:aqua_mate/view/dashboard/Maintaince.dart';
-import 'package:aqua_mate/view/dashboard/library.dart';
+import 'package:aqua_mate/view/dashboard/library/library.dart';
 import 'package:aqua_mate/view/dashboard/settings.dart';
 import 'package:aqua_mate/view/dashboard/reminderSetupForm.dart';
 import '../view/dashboard/compability_checker.dart';

@@ -48,8 +48,12 @@ class MobileScreenWrapper extends StatelessWidget {
             border: Border.all(color: AppColors.phoneBorder, width: 12),
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(36), // Inner rounding
-            child: const MaintenanceScreen(), // Your app starts here
+            borderRadius: BorderRadius.circular(36),
+            child: Container(
+              color: Colors.white,     // ← makes inside fully white
+              child: const MaintenanceScreen(),
+
+          ),
           ),
         ),
       ),
@@ -223,57 +227,91 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
     );
   }
 
-  // Helper widget for the custom header section (UPDATED FOR NEW UI)
+  // Helper widget for the custom header section (match Library UI)
   Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.only(top: 50, left: 24, right: 24, bottom: 20), // Reduced bottom padding
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF7EE8FA),
-            Color(0xFF49AEB1)], // A fresh blue gradient (adjust if needed)
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        // No bottom radius here, as the content now sits flush below it.
-        // If you want a slight curve, add:
-        // borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25), bottomRight: Radius.circular(25)),
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+        bottomLeft: Radius.circular(25),
+        bottomRight: Radius.circular(25),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Top Bar (App Name & Icons)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Image.asset(
-                    "assets/images/logo.png", // Ensure this path is correct
-                    height: 35,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'AquaMate',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87), // Changed to black for contrast
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.notifications_none, color: Colors.black87, size: 28), // Changed to black
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.person_outline, color: Colors.black87, size: 28), // Changed to black
-                  ),
-                ],
-              ),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.only(top: 50, left: 24, right: 24, bottom: 20),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF7EE8FA),
+              Color(0xFF49AEB1),
             ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          // Removed the "Maintenance" title and subtitle from here
-        ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top Bar (App Name & Icons)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Image.asset(
+                      "assets/images/logo.png",
+                      height: 35,
+                    ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'AquaMate',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.notifications_none,
+                        color: Colors.black87,
+                        size: 28,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.person_outline,
+                        color: Colors.black87,
+                        size: 28,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'Maintenance',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Keep your aquarium healthy',
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.grey.shade800,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -284,7 +322,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       animation: _maintenanceController,
       builder: (context, _) {
         return Scaffold(
-          backgroundColor: Colors.transparent, // Background handled by the wrapper
+          backgroundColor: Colors.white, // Background handled by the wrapper
 
           // Floating Action Button (Moved to endFloat as per screenshot)
           floatingActionButton: FloatingActionButton(
@@ -307,6 +345,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             children: [
               // Header Section
               _buildHeader(),
+              const SizedBox(height: 16),
 
               // Scrollable Content Body (Expanded to fill remaining space)
               Expanded(
@@ -318,19 +357,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // --- Reminder Title and Subtitle (NEW LOCATION) ---
-                        const Text(
-                          'Reminder',
-                          style: TextStyle(
-                              fontSize: 32, // Adjusted font size
-                              fontWeight: FontWeight.w800,
-                              color: Colors.black87,
-                              letterSpacing: 0.5),
-                        ),
-                        Text(
-                          'Keeping your aquarium',
-                          style: TextStyle(fontSize: 16, color: Colors.grey.shade700), // Darker grey
-                        ),
-                        const SizedBox(height: 30), // More space before "Urgent"
+                        const SizedBox(height: 8),
 
                         _buildTaskSection(
                           title: 'Urgent',

@@ -6,13 +6,8 @@ import 'package:aqua_mate/widgets/shared_bottom_nav.dart';
 class CompatibilityCard extends StatelessWidget {
   const CompatibilityCard({super.key});
   @override
-  Widget build(BuildContext context) => Container(height: 120, color: Colors.green.shade100, child: const Center(child: Text('Fish Compatibility Card')));
-}
-
-class MaintenanceCard extends StatelessWidget {
-  const MaintenanceCard({super.key});
-  @override
-  Widget build(BuildContext context) => Container(height: 120, color: Colors.pink.shade100, child: const Center(child: Text('Maintenance Review Card')));
+  Widget build(BuildContext context) =>
+      Container(height: 120, color: Colors.green.shade100, child: const Center(child: Text('Fish Compatibility Card')));
 }
 
 class AquariumInfoCard extends StatelessWidget {
@@ -20,7 +15,8 @@ class AquariumInfoCard extends StatelessWidget {
   final Color color;
   const AquariumInfoCard({super.key, required this.tankName, required this.color});
   @override
-  Widget build(BuildContext context) => Container(height: 180, color: color, child: Center(child: Text(tankName)));
+  Widget build(BuildContext context) =>
+      Container(height: 180, color: color, child: Center(child: Text(tankName)));
 }
 
 // Main Dashboard Page
@@ -85,7 +81,7 @@ class DashboardPage extends StatelessWidget {
                 Row(
                   children: [
                     Image.asset(
-                      "assets/images/logo.png", // Ensure this path is correct
+                      "assets/images/logo.png",
                       height: 35,
                     ),
                     const SizedBox(width: 8),
@@ -135,7 +131,7 @@ class DashboardPage extends StatelessWidget {
               "Your aquarium is doing great",
               style: TextStyle(
                 fontSize: 15,
-                color: Colors.grey.shade800,
+                color: Colors.grey,
               ),
             ),
           ],
@@ -150,6 +146,7 @@ class DashboardPage extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: padding, vertical: 8.0),
       children: [
+        // 1. Compatibility Checker Card
         InkWell(
           onTap: () {
             Navigator.pushNamed(context, AppRoutes.compatibilityChecker);
@@ -168,26 +165,22 @@ class DashboardPage extends StatelessWidget {
             ),
           ),
         ),
-
-
-        // 2. Maintenance Review Card (Pink/Red)
-        const MaintenanceCard(),
         const SizedBox(height: padding),
 
-        // 3. Aquarium Info Card 1 (Blue/Purple)
+        // 2. Aquarium Info Card 1
         AquariumInfoCard(
           tankName: 'Tank Name: Fishy Kingdom',
           color: Colors.blue.shade100,
         ),
         const SizedBox(height: padding),
 
-        // 4. Aquarium Info Card 2 (Lighter Blue)
+        // 3. Aquarium Info Card 2
         AquariumInfoCard(
           tankName: 'Tank Name: Aqua Aura',
           color: Colors.indigo.shade100,
         ),
-        // Space at the bottom so the last card isn't covered by the FAB
-        const SizedBox(height: 100),
+
+        const SizedBox(height: 100), // Bottom space
       ],
     );
   }
@@ -195,10 +188,9 @@ class DashboardPage extends StatelessWidget {
   Widget _buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        // Navigate to the aquarium setup page
         Navigator.pushNamed(context, AppRoutes.aquariumSetup);
       },
-      backgroundColor: Colors.green, // Use your app's primary color
+      backgroundColor: Colors.green,
       elevation: 2,
       shape: const CircleBorder(),
       child: const Icon(Icons.add, color: Colors.white, size: 35),

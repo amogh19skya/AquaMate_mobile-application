@@ -31,3 +31,13 @@ flutter:
     - assets/images/library/freshwater.png
     - assets/images/library/saltwater.png
     - assets/images/library/aquascape.png
+    - assets/images/library/fresh_fish/guppy-blue.webp
+    - assets/images/library/fresh_fish/blue_angelfish.png
+    - assets/images/library/fresh_fish/golden-fish-black.jpg
+    - assets/images/library/fresh_fish/betta.jpg
+    - assets/images/library/salt_fish/clown-fish.webp
+    - assets/images/library/salt_fish/yellow_tang.jpeg
+    - assets/images/library/salt_fish/mandarin_dragonet.jpg
+    - assets/images/library/salt_fish/blue_tang.jpeg
+
+
